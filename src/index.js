@@ -24,13 +24,12 @@ import {SummonersInfoBlock} from './components/summoners-info/index';
 
     async function startApp() {
 
-        let getInfo = MODEL.getSummonersInfo.bind(MODEL);
         let inputText = MODEL.getElementById('search-input').value
 
         if (inputText.length > 0) {
 
             MODEL.getSpinnerOn();
-            MODEL.summonersInfo = await getInfo();
+            MODEL.summonersInfo = await MODEL.getSummonersInfo();
             MODEL.getSpinnerOff();
 
             MODEL.getElementById('summoners-info').innerHTML = '';

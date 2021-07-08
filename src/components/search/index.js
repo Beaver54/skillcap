@@ -1,5 +1,7 @@
 import React from 'react';
 
+import {PlatformSelect} from './platform/index';
+
 export function SearchForm(props) {
     return (
         <div className="search">
@@ -9,19 +11,7 @@ export function SearchForm(props) {
                     <div id="search-input-alert" className="form-alert"></div>
                 </div>
                 <div className="col-2">
-                    <select id="platform" className="form-control">
-                        <option value="RU">RU</option>
-                        <option value="BR1">BR</option>
-                        <option value="EUN1">EUN</option>
-                        <option value="EUW1">EUW</option>
-                        <option value="JP1">JP</option>
-                        <option value="KR">KR</option>
-                        <option value="LA1">LA</option>
-                        <option value="LA2">LA</option>
-                        <option value="NA1">NA</option>
-                        <option value="OC1">OC</option>
-                        <option value="TR1">TR</option>
-                    </select>
+                    <PlatformSelect />
                 </div>
                 <div className="col-2">
                     <button id="start" type="button" className="btn btn-primary">

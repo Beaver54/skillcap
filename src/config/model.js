@@ -6,6 +6,14 @@ export const MODEL = {
     // Summoner's information
     summonersInfo: [],
 
+    bindAll: function (obj) {
+        for (let item in obj) {
+            if (typeof obj[item] == 'function') {
+                obj[item] = obj[item].bind(obj);
+            }
+        }
+    },
+
     // Get HTML element by ID
     getElementById: function (id) {
         return document.getElementById(id);
@@ -34,10 +42,34 @@ export const MODEL = {
         }
     },
 
+    // Get element for input string spliting
+    getSplitingElement: function () {
+
+        let inputValue = this.getElementById('search-input').value;
+        // Number of lines in the textarea
+        let lines = 0;
+
+        for (let i = 0; i < inputValue.length; i++) {
+            if (inputValue[i] === '\n') {
+                lines++;
+            }
+        }
+
+        if (lines > 0) {
+            return '\n'
+        } else {
+            return ','
+        }
+
+    },
+
     // Get string for delete from connection message
     getStringForDelete: function () {
 
-        let joinedSummoners = this.getElementById('search-input').value.split('\n');
+        let inputValue = this.getElementById('search-input').value;
+
+        let joinedSummoners = inputValue.split(this.getSplitingElement());
+
         joinedSummoners.forEach(function (item, id, arr) {
             joinedSummoners[id] = item.split(' ');
             joinedSummoners[id].reverse();
@@ -62,7 +94,8 @@ export const MODEL = {
             }
         })
 
-        if (flag === 4) {
+        if (flag === clear.length) {
+            console.log(clear[0])
             return clear[0];
         }
     },
@@ -72,10 +105,10 @@ export const MODEL = {
 
         let summonerList    = [];
         let stringForDelete = new RegExp(this.getStringForDelete(), 'gi');
-        let summonerNames   = this.getElementById('search-input').value.replace(stringForDelete, '').split('\n');
+        let summonerNames   = this.getElementById('search-input').value.replace(stringForDelete, '').split(this.getSplitingElement());
         let platform        = this.getElementById('platform').value;
 
-        summonerNames.forEach(function (item, id,arr) {
+        summonerNames.forEach(function (item, id, arr) {
             summonerList[id] = {
                 name: item,
                 platform: CONFIG.platform[platform],
@@ -107,4 +140,6 @@ export const MODEL = {
         this.getElementById('start').removeAttribute('disabled');
     },
 
-}
+};
+
+MODEL.bindAll(MODEL);
