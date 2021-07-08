@@ -1,0 +1,8 @@
+@import "../../node_modules/bootstrap/scss/bootstrap";
+@import "theme-variables";
+@import "main";
+
+// Components
+@import "/src/components/champion-icon/style";
+@import "/src/components/search/style";
+@import "/src/components/summoners-info/style";
