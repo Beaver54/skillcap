@@ -1,13 +1,14 @@
 import React from 'react';
 
 import {PlatformSelect} from './platform/index';
+import {SearchInput} from './search-input/index';
 
 export function SearchForm(props) {
     return (
         <div className="search">
             <form className="row">
                 <div className="col-8">
-                    <textarea className="form-control search-input" id="search-input" rows="5"></textarea>
+                    <SearchInput />
                     <div id="search-input-alert" className="form-alert"></div>
                 </div>
                 <div className="col-2">
