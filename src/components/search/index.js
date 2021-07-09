@@ -16,8 +16,7 @@ export function SearchForm(props) {
                 </div>
                 <div className="col-2">
                     <button id="start" type="button" className="btn btn-primary">
-                        <span id="spinner"></span>
-                        Search
+                        <span id="spinner"></span> Search
                     </button>
                 </div>
             </form>

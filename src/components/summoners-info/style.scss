@@ -5,47 +5,5 @@
     display: flex;
     flex-wrap: wrap;
     padding: 0 5px;
-    .summoner-col{
-      flex: 0 0 20%;
-      max-width: 20%;
-      padding-right: 5px;
-      &:last-child {
-        padding-right: 0;
-      }
-      .win{
-        background-color: $green;
-      }
-      .defeat{
-        background-color: $red;
-      }
-      .match{
-        width: 100%;
-        display: flex;
-        flex-wrap: wrap;
-        padding: 10px;
-        border-bottom: 2px solid #fff;
-        .champion-icon{
-          flex: 0 0 40px;
-          width: 40px;
-          height: 40px;
-          background-repeat: no-repeat;
-          background-size: cover;
-          border-radius: 50%;
-        }
-        .match-info{
-          flex: 0 0 80%;
-          max-width: 80%;
-          display: flex;
-          flex-wrap: wrap;
-          padding-left: 10px;
-          span {
-            display: block;
-            flex: 0 0 50%;
-            max-width: 50%;
-            font-size: 14px;
-          }
-        }
-      }
-    }
   }
 }

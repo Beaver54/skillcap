@@ -10,6 +10,7 @@ import {MODEL} from './config/model';
 
 import {SearchForm} from './components/search/index';
 import {SummonersInfoBlock} from './components/summoners-info/index';
+import {SummonerColumn} from './components/summoners-info/summoner-col/index';
 
 ;(async function () {
     'use strict'
@@ -22,54 +23,37 @@ import {SummonersInfoBlock} from './components/summoners-info/index';
         document.getElementById('app')
     );
 
+    if (window.location.search !== '') {
+        let urlParams = JSON.parse(window.location.search.replace('?', '').
+        replace(/^/, '{"').
+        replace(/$/, '"}').
+        replaceAll('&', '","').
+        replaceAll('=', '":"'));
+
+        if (urlParams.summonerList === 'lastRequest') {
+
+            MODEL.summonersInfo = JSON.parse(localStorage.getItem('summonersInfo'));
+            MODEL.contentDisplay.displaySummonersInfo();
+
+        }
+    }
+
+
     async function startApp() {
 
         let inputText = MODEL.getElementById('search-input').value
 
         if (inputText.length > 0) {
 
-            MODEL.getSpinnerOn();
+            localStorage.clear();
+
+            MODEL.spinner.getSpinnerOn('start');
             MODEL.summonersInfo = await MODEL.getSummonersInfo();
-            MODEL.getSpinnerOff();
+            MODEL.spinner.getSpinnerOff('start');
 
-            MODEL.getElementById('summoners-info').innerHTML = '';
+            localStorage.setItem('summonersInfo', JSON.stringify(MODEL.summonersInfo));
 
-            for (let key in MODEL.summonersInfo) {
-
-                function getMatchInfo(summoner) {
-                    MODEL.summonersInfo[summoner].matches.forEach(function (match, id, arr) {
-
-                        MODEL.getElementById(MODEL.summonersInfo[key].summonerName).insertAdjacentHTML(
-                            'beforeend',
-                            `
-                            <div class="match ${MODEL.getColorOfGame(match.win)}">
-                                <div class="champion-icon" style="background-image: url(/images/champion/${match.championName}.png)"></div>
-                                <div class="match-info">
-                                    <span class="kda">${match.kills}/${match.deaths}/${match.assists}</span>
-                                    <span class="role">${match.lane}</span>
-                                    <span class="date">${MODEL.getCurrentTimeFromStamp(match.gameCreation)}</span>
-                                    <span class="game-duration">${MODEL.getGameDuration(match.gameDuration)}</span>
-                                    <span class="pink-wards">${match.visionWardsBoughtInGame} wards</span>
-                                    <span class="cs">${match.totalMinionsKilled + match.neutralMinionsKilled}</span>
-                                </div>
-                            </div>
-                            `
-                        )
-                    })
-                }
-
-                MODEL.getElementById('summoners-info').insertAdjacentHTML(
-                    'beforeend',
-                    `
-                    <div id="${MODEL.summonersInfo[key].summonerName}" class="summoner-col">
-                        <div class="summoner-name">${MODEL.summonersInfo[key].summonerName}</div>
-                    </div>
-                    `
-                )
-
-                getMatchInfo(key);
-
-            }
+            document.location.href = "/?summonerList=lastRequest";
 
         } else {
             MODEL.getElementById('search-input-alert').innerText = 'Введите никнеймы своей команды'
@@ -78,5 +62,7 @@ import {SummonersInfoBlock} from './components/summoners-info/index';
     }
 
     MODEL.getElementById('start').addEventListener('click', startApp);
+
+    console.log(JSON.parse(localStorage.getItem('summonersInfo')))
 
 })();

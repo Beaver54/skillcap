@@ -6,11 +6,78 @@ export const MODEL = {
     // Summoner's information
     summonersInfo: [],
 
+    // Spinner's methods
+    spinner: {
+
+        // Start spinner while data loading
+        getSpinnerOn: function (buttonID) {
+            this.getElementById('spinner').className = 'spinner-border spinner-border-sm';
+            this.getElementById(buttonID).setAttribute('disabled', 'disabled');
+        },
+
+        // Stop spinner loading
+        getSpinnerOff: function (buttonID) {
+            this.getElementById('spinner').className = '';
+            this.getElementById(buttonID).removeAttribute('disabled');
+        },
+
+    },
+
+    // Displaying content on the app page
+    contentDisplay: {
+
+        // Display match info on screen
+        displayMatchInfo: function(summoner) {
+            this.summonersInfo[summoner].matches.forEach(function (match, id, arr) {
+
+                MODEL.getElementById(MODEL.summonersInfo[summoner].summonerName).insertAdjacentHTML(
+                    'beforeend',
+                    `
+                    <div class="match ${MODEL.getColorOfGame(match.win)}">
+                        <div class="champion-icon" style="background-image: url(/images/champion/${match.championName}.png)"></div>
+                        <div class="match-info">
+                            <span class="kda">${match.kills}/${match.deaths}/${match.assists}</span>
+                            <span class="role">${match.lane}</span>
+                            <span class="date">${MODEL.getCurrentTimeFromStamp(match.gameCreation)}</span>
+                            <span class="game-duration">${MODEL.getGameDuration(match.gameDuration)}</span>
+                            <span class="pink-wards">${match.visionWardsBoughtInGame} wards</span>
+                            <span class="cs">${match.totalMinionsKilled + match.neutralMinionsKilled}</span>
+                        </div>
+                    </div>
+                    `
+                )
+            })
+        },
+
+        // Display summoner info on screen
+        displaySummonersInfo: function () {
+
+            this.getElementById('summoners-info').innerHTML = '';
+
+            for (let key in this.summonersInfo) {
+
+                MODEL.getElementById('summoners-info').insertAdjacentHTML(
+                    'beforeend',
+                    `
+                    <div id="${this.summonersInfo[key].summonerName}" class="summoner-col">
+                        <div class="summoner-name">${this.summonersInfo[key].summonerName}</div>
+                    </div>
+                    `
+                )
+
+                MODEL.contentDisplay.displayMatchInfo(key);
+
+            }
+
+        },
+
+    },
+
     // Bind all functions
-    bindAll: function (obj) {
+    bindAll: function (obj, bindObj) {
         for (let item in obj) {
             if (typeof obj[item] == 'function') {
-                obj[item] = obj[item].bind(obj);
+                obj[item] = obj[item].bind(bindObj);
             }
         }
     },
@@ -42,8 +109,8 @@ export const MODEL = {
 
     // Get game duration on minutes
     getGameDuration: function (duration) {
-        let gameDuration = duration / 60;
-        return gameDuration.toFixed(1);
+        let gameDuration = `${Math.trunc(duration / 60)}:${((duration % 60) < 10) ? '0' : ''}${duration % 60}`;
+        return gameDuration;
     },
 
     // Get background color of match block
@@ -156,18 +223,8 @@ export const MODEL = {
         }).then((response) => {return response.data });
     },
 
-    // Start spinner while data loading
-    getSpinnerOn: function () {
-        this.getElementById('spinner').className = 'spinner-border spinner-border-sm';
-        this.getElementById('start').setAttribute('disabled', 'disabled');
-    },
-
-    // Stop spinner loading
-    getSpinnerOff: function () {
-        this.getElementById('spinner').className = '';
-        this.getElementById('start').removeAttribute('disabled');
-    },
-
 };
 
-MODEL.bindAll(MODEL);
+MODEL.bindAll(MODEL, MODEL);
+MODEL.bindAll(MODEL.spinner, MODEL);
+MODEL.bindAll(MODEL.contentDisplay, MODEL);
