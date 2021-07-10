@@ -26,7 +26,7 @@ app.post('/api/forecast', cors(CONFIG.corsOptions), async function (request, res
         let summonerMatchList = await API_METHODS.getData(API_METHODS.apiPath.getMatchListByAccountID(summonerData.accountId, platform, '', '420', '', '', '', '10', '0'), 'matchList');
         let matchesInfo = [];
         for (let item of summonerMatchList.matches) {
-            let singleMatchInfo = await API_METHODS.getData(API_METHODS.apiPath.getMatchInfobyMatchID(item.gameId, platform), 'currentMatch');
+            let singleMatchInfo = await API_METHODS.getData(API_METHODS.apiPath.getMatchInfoByMatchID(item.gameId, platform), 'currentMatch');
             matchesInfo.push(singleMatchInfo);
         }
         return {

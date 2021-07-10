@@ -17,7 +17,7 @@ const API_METHODS = {
         },
 
         // Create a link to summoner data by summoner name
-        getMatchInfobyMatchID: function (matchID, platform) {
+        getMatchInfoByMatchID: function (matchID, platform) {
             return `https://${platform}/lol/match/v4/matches/${matchID}?api_key=${CONFIG.apiKey}`;
         },
 
