@@ -10,7 +10,7 @@ const isProd = !isDev;
 
 module.exports = {
     mode: 'development',
-    entry: './src/index.js',
+    entry: './src/index.tsx',
     output: {
         filename: 'bundle.js',
         path: path.resolve(__dirname, 'dist'),
@@ -20,9 +20,10 @@ module.exports = {
         hot: isDev,
     },
     resolve: {
+        extensions: ['.tsx', '.ts', '.js'],
         alias: {
             //'@': path.resolve(__dirname, 'src'),
-        }
+        },
     },
     plugins: [
         new HTMLWebpackPlugin({
@@ -84,6 +85,11 @@ module.exports = {
                     outputPath: 'images',
                     publicPath: '/images',
                 },
+            },
+            {
+                test: /\.tsx?$/,
+                use: 'ts-loader',
+                exclude: /node_modules/,
             },
         ]
     },

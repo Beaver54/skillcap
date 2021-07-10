@@ -25,7 +25,9 @@ const API_METHODS = {
 
     // Get data from API Riot
     getData: function (url, action) {
-        return  axios.get(url).then(response => {return response.data});
+        return  axios.get(url).
+                    then(response => {return response.data}).
+                    catch(error => {console.log(error.response.status)});
     },
 
 }
