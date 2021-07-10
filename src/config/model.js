@@ -1,5 +1,9 @@
 import {CONFIG} from "./config";
 import axios from "axios";
+import React from 'react';
+import ReactDOM from 'react-dom';
+
+import {SummonerColumn} from '../components/summoners-info/summoner-col/index';
 
 export const MODEL = {
 
@@ -19,56 +23,6 @@ export const MODEL = {
         getSpinnerOff: function (buttonID) {
             this.getElementById('spinner').className = '';
             this.getElementById(buttonID).removeAttribute('disabled');
-        },
-
-    },
-
-    // Displaying content on the app page
-    contentDisplay: {
-
-        // Display match info on screen
-        displayMatchInfo: function(summoner) {
-            this.summonersInfo[summoner].matches.forEach(function (match, id, arr) {
-
-                MODEL.getElementById(MODEL.summonersInfo[summoner].summonerName).insertAdjacentHTML(
-                    'beforeend',
-                    `
-                    <div class="match ${MODEL.getColorOfGame(match.win)}">
-                        <div class="champion-icon" style="background-image: url(/images/champion/${match.championName}.png)"></div>
-                        <div class="match-info">
-                            <span class="kda">${match.kills}/${match.deaths}/${match.assists}</span>
-                            <span class="role">${match.lane}</span>
-                            <span class="date">${MODEL.getCurrentTimeFromStamp(match.gameCreation)}</span>
-                            <span class="game-duration">${MODEL.getGameDuration(match.gameDuration)}</span>
-                            <span class="pink-wards">${match.visionWardsBoughtInGame} wards</span>
-                            <span class="cs">${match.totalMinionsKilled + match.neutralMinionsKilled}</span>
-                        </div>
-                    </div>
-                    `
-                )
-            })
-        },
-
-        // Display summoner info on screen
-        displaySummonersInfo: function () {
-
-            this.getElementById('summoners-info').innerHTML = '';
-
-            for (let key in this.summonersInfo) {
-
-                MODEL.getElementById('summoners-info').insertAdjacentHTML(
-                    'beforeend',
-                    `
-                    <div id="${this.summonersInfo[key].summonerName}" class="summoner-col">
-                        <div class="summoner-name">${this.summonersInfo[key].summonerName}</div>
-                    </div>
-                    `
-                )
-
-                MODEL.contentDisplay.displayMatchInfo(key);
-
-            }
-
         },
 
     },
@@ -223,8 +177,63 @@ export const MODEL = {
         }).then((response) => {return response.data });
     },
 
+    // Display summoners info from local storage if client is on a page with parameters
+    getUrlParams: function() {
+        if (window.location.search !== '') {
+            let urlParams = JSON.parse(window.location.search.replace('?', '').
+            replace(/^/, '{"').
+            replace(/$/, '"}').
+            replaceAll('&', '","').
+            replaceAll('=', '":"'));
+
+            if (urlParams.summonerList === 'lastRequest') {
+
+                MODEL.summonersInfo = JSON.parse(localStorage.getItem('summonersInfo'));
+                MODEL.displaySummonersInfo();
+
+            }
+        }
+    },
+
+    // Display summoner info on screen
+    displaySummonersInfo: function () {
+
+        this.getElementById('summoners-info').innerHTML = '';
+
+        ReactDOM.render(
+            <SummonerColumn summonersInfo={MODEL.summonersInfo}
+                            getColorOfGame={MODEL.getColorOfGame}
+                            getCurrentTimeFromStamp={MODEL.getCurrentTimeFromStamp}
+                            getGameDuration={MODEL.getGameDuration}
+            />,
+            document.getElementById('summoners-info')
+        );
+
+    },
+
+    startApp: async function () {
+
+        let inputText = MODEL.getElementById('search-input').value
+
+        if (inputText.length > 0) {
+
+            localStorage.clear();
+
+            MODEL.spinner.getSpinnerOn('start');
+            MODEL.summonersInfo = await MODEL.getSummonersInfo();
+            MODEL.spinner.getSpinnerOff('start');
+
+            localStorage.setItem('summonersInfo', JSON.stringify(MODEL.summonersInfo));
+
+            document.location.href = "/?summonerList=lastRequest";
+
+        } else {
+            MODEL.getElementById('search-input-alert').innerText = 'Введите никнеймы своей команды'
+        }
+
+    },
+
 };
 
 MODEL.bindAll(MODEL, MODEL);
 MODEL.bindAll(MODEL.spinner, MODEL);
-MODEL.bindAll(MODEL.contentDisplay, MODEL);
