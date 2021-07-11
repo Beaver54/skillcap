@@ -4,6 +4,7 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 
 import {SummonerColumn} from '../components/summoners-info/summoner-col';
+import {AlertMessage} from "../components/alert";
 
 export const MODEL = {
 
@@ -220,8 +221,18 @@ export const MODEL = {
             this.summonersInfo = await this.getSummonersInfo();
             this.spinner.getSpinnerOff('start');
 
-            if (this.summonersInfo.name === 'Error' || typeof this.summonersInfo === 'number') {
-
+            if (this.summonersInfo.name === 'Error') {
+                if (this.summonersInfo.response) {
+                    ReactDOM.render(
+                        <AlertMessage alertStyle='alert-danger' alertMessage={this.getErrorMessage(this.summonersInfo.response.status)} />,
+                        document.getElementById('summoners-info')
+                    );
+                } else {
+                    ReactDOM.render(
+                        <AlertMessage alertStyle='alert-danger' alertMessage={this.getErrorMessage(this.summonersInfo)} />,
+                        document.getElementById('summoners-info')
+                    );
+                }
             } else {
                 localStorage.setItem('summonersInfo', JSON.stringify(this.summonersInfo));
                 document.location.href = "/?summonerList=lastRequest";
@@ -238,33 +249,25 @@ export const MODEL = {
             case 400:
                 return 'Something went wrong. Perhaps your request is incorrect.';
             case 401:
-                return 'Something went wrong. We\'re in trouble. We are sorry.';
+                return 'Something went wrong. We have some problems. Try later. We are sorry.';
             case 403:
-
-                break;
+                return 'Something went wrong. We have some problems. Try later. We are sorry.';
             case 404:
-
-                break;
+                return 'Something went wrong. We have some problems. Try later. We are sorry.';
             case 405:
-
-                break;
+                return 'Something went wrong. We have some problems. Try later. We are sorry.';
             case 415:
-
-                break;
+                return 'Something went wrong. We have some problems. Try later. We are sorry.';
             case 429:
                 return 'The last update was less than a minute ago. Try it in a minute.';
             case 500:
-
-                break;
+                return 'Something went wrong. We have some problems. Try later. We are sorry.';
             case 502:
-
-                break;
+                return 'Something went wrong. We have some problems. Try later. We are sorry.';
             case 503:
-
-                break;
+                return 'Something went wrong. We have some problems. Try later. We are sorry.';
             case 504:
-
-                break;
+                return 'Something went wrong. We have some problems. Try later. We are sorry.';
             default:
                 return 'Sorry. Unknown error.';
         }
