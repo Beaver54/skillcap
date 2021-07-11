@@ -4,12 +4,16 @@ import {MODEL} from '/src/config/model';
 
 export class SearchInput extends React.Component {
     constructor(props) {
-        super(props);
 
+        super(props);
         this.getStringOfSummonerNames = this.getStringOfSummonerNames.bind(this);
+
     }
 
     // Replace list of summoner names with string
+    props;
+
+    // Replace input text
     getStringOfSummonerNames() {
 
         function getNewString() {
@@ -24,7 +28,7 @@ export class SearchInput extends React.Component {
 
     render() {
         return (
-            <textarea className="form-control search-input" id="search-input" onPaste={this.getStringOfSummonerNames} />
+            <textarea className="form-control search-input" id="search-input" onPaste={this.getStringOfSummonerNames} placeholder={this.props.inputPlaceholder} />
         );
     }
 }
