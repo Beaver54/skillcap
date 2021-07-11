@@ -170,8 +170,8 @@ export const MODEL = {
             headers: {
                 'Content-Type': 'application/json;charset=utf-8'
             }
-        }).then((response) => {return response.data }).
-           catch(error => {return error.response.status});
+        }).then((response) => {return response.data;}).
+           catch(error => {return error;});
     },
 
     // Display summoners info from local storage if client is on a page with parameters
@@ -186,7 +186,6 @@ export const MODEL = {
             if (urlParams.summonerList === 'lastRequest') {
 
                 MODEL.summonersInfo = JSON.parse(localStorage.getItem('summonersInfo'));
-                console.log(MODEL.summonersInfo);
                 MODEL.displaySummonersInfo();
 
             }
@@ -221,14 +220,54 @@ export const MODEL = {
             this.summonersInfo = await this.getSummonersInfo();
             this.spinner.getSpinnerOff('start');
 
-            localStorage.setItem('summonersInfo', JSON.stringify(this.summonersInfo));
+            if (this.summonersInfo.name === 'Error' || typeof this.summonersInfo === 'number') {
 
-            document.location.href = "/?summonerList=lastRequest";
+            } else {
+                localStorage.setItem('summonersInfo', JSON.stringify(this.summonersInfo));
+                document.location.href = "/?summonerList=lastRequest";
+            }
 
         } else {
             this.getElementById('search-input-alert').innerText = 'Enter your team\'s summoner names'
         }
 
+    },
+
+    getErrorMessage: function (errorCode: number) {
+        switch (errorCode) {
+            case 400:
+                return 'Something went wrong. Perhaps your request is incorrect.';
+            case 401:
+                return 'Something went wrong. We\'re in trouble. We are sorry.';
+            case 403:
+
+                break;
+            case 404:
+
+                break;
+            case 405:
+
+                break;
+            case 415:
+
+                break;
+            case 429:
+                return 'The last update was less than a minute ago. Try it in a minute.';
+            case 500:
+
+                break;
+            case 502:
+
+                break;
+            case 503:
+
+                break;
+            case 504:
+
+                break;
+            default:
+                return 'Sorry. Unknown error.';
+        }
     },
 
 };
