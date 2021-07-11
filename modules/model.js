@@ -1,4 +1,29 @@
+const API_METHODS = require('./api-methods');
+
 const MODEL = {
+
+    // Get list with information about summoners matches
+    getMatchInfoList: async function (summonerMatchList, platform, response) {
+
+        if (summonerMatchList === false) {
+            return false;
+        }
+
+        let matchesInfo = [];
+
+        for (let item of summonerMatchList.matches) {
+            let singleMatchInfo = await API_METHODS.getData(API_METHODS.apiPath.getMatchInfoByMatchID(item.gameId, platform), 'currentMatch', response);
+            if (singleMatchInfo) {
+                matchesInfo.push(singleMatchInfo);
+            } else {
+                matchesInfo = false;
+                break;
+            }
+        }
+
+        return matchesInfo;
+
+    },
 
     // Get data from API and convert to object for sending to front-end
     getSummonerInfo: function (summonerData, championsData) {

@@ -170,7 +170,8 @@ export const MODEL = {
             headers: {
                 'Content-Type': 'application/json;charset=utf-8'
             }
-        }).then((response) => {return response.data });
+        }).then((response) => {return response.data }).
+           catch(error => {return error.response.status});
     },
 
     // Display summoners info from local storage if client is on a page with parameters
@@ -185,6 +186,7 @@ export const MODEL = {
             if (urlParams.summonerList === 'lastRequest') {
 
                 MODEL.summonersInfo = JSON.parse(localStorage.getItem('summonersInfo'));
+                console.log(MODEL.summonersInfo);
                 MODEL.displaySummonersInfo();
 
             }
@@ -224,7 +226,7 @@ export const MODEL = {
             document.location.href = "/?summonerList=lastRequest";
 
         } else {
-            this.getElementById('search-input-alert').innerText = 'Введите никнеймы своей команды'
+            this.getElementById('search-input-alert').innerText = 'Enter your team\'s summoner names'
         }
 
     },
