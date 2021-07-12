@@ -198,11 +198,12 @@ export const MODEL = {
 
         this.getElementById('summoners-info').innerHTML = '';
 
+        console.log(MODEL.summonersInfo);
+
         ReactDOM.render(
             <SummonerColumn summonersInfo={MODEL.summonersInfo}
                             getColorOfGame={MODEL.getColorOfGame}
                             getCurrentTimeFromStamp={MODEL.getCurrentTimeFromStamp}
-                            getGameDuration={MODEL.getGameDuration}
             />,
             document.getElementById('summoners-info')
         );

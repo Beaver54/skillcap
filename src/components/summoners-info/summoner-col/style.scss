@@ -6,17 +6,21 @@
     padding-right: 0;
   }
   .win{
-    background-color: $green;
+    border: 1px solid $win-border;
+    background-color: $win-background;
+    color: $win-text;
   }
   .defeat{
-    background-color: $red;
+    border: 1px solid $defeat-border;
+    background-color: $defeat-border;
+    color: $defeat-text;
   }
   .match{
     width: 100%;
     display: flex;
     flex-wrap: wrap;
     padding: 10px;
-    border-bottom: 2px solid $white;
+    margin-bottom: 2px;
     .champion-icon{
       flex: 0 0 40px;
       width: 40px;
@@ -26,8 +30,8 @@
       border-radius: 50%;
     }
     .match-info{
-      flex: 0 0 80%;
-      max-width: 80%;
+      flex: 0 0 calc(80% - 2px);
+      max-width: calc(80% - 2px);
       display: flex;
       flex-wrap: wrap;
       padding-left: 10px;

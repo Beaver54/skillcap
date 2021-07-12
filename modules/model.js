@@ -2,6 +2,15 @@ const API_METHODS = require('./api-methods');
 
 const MODEL = {
 
+    // Bind all functions
+    bindAll: function (obj, bindObj) {
+        for (let item in obj) {
+            if (typeof obj[item] == 'function') {
+                obj[item] = obj[item].bind(bindObj);
+            }
+        }
+    },
+
     // Get list with information about summoners matches
     getMatchInfoList: async function (summonerMatchList, platform, response) {
 
@@ -71,7 +80,6 @@ const MODEL = {
                             'kills':                    playerInfo.stats.kills,
                             'deaths':                   playerInfo.stats.deaths,
                             'assists':                  playerInfo.stats.assists,
-                            'lane':                     playerInfo.timeline.lane,
                             'totalMinionsKilled':       playerInfo.stats.totalMinionsKilled,
                             'neutralMinionsKilled':     playerInfo.stats.neutralMinionsKilled,
                             'visionWardsBoughtInGame':  playerInfo.stats.visionWardsBoughtInGame,
@@ -84,8 +92,42 @@ const MODEL = {
         }
 
         return summonerInfo;
+    },
+
+    getDataFromRiotAPI: async function(response, summonerName, platform) {
+        let summonerData = await API_METHODS.getData(API_METHODS.apiPath.getBySummonerName(summonerName, platform), 'summonerInfo', response);
+        let summonerMatchList = await API_METHODS.getData(API_METHODS.apiPath.getMatchListByAccountID(summonerData.accountId, platform, '', '420', '', '', '', '10', '0'), 'matchList', response);
+        let matchesInfo = await MODEL.getMatchInfoList(summonerMatchList, platform, response);
+
+        if (!summonerName || !summonerMatchList || !matchesInfo) {
+            return false;
+        } else {
+            return {
+                platform: platform,
+                summonerInfo: summonerData,
+                summonerMatchList: summonerMatchList,
+                matchesInfo: matchesInfo
+            };
+        }
+    },
+
+    getSummonerData: async function (array, response) {
+        let outputAPI = {};
+        for (let item of array) {
+            outputAPI[item.name] = await this.getDataFromRiotAPI(response, item.name, item.platform);
+            if (!outputAPI[item.name]) {
+                return false;
+            }
+        }
+        return outputAPI;
+    },
+
+    getChampionsData: async function (response) {
+        let championsData = await API_METHODS.getData('http://ddragon.leagueoflegends.com/cdn/11.13.1/data/en_US/champion.json', 'championsData', response);
+        return championsData;
     }
 
 }
 
+MODEL.bindAll(MODEL, MODEL);
 module.exports = MODEL;
