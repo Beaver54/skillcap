@@ -13,7 +13,7 @@ module.exports = {
     entry: './src/index.js',
     output: {
         filename: 'bundle.js',
-        path: path.resolve(__dirname, 'dist'),
+        path: path.resolve(__dirname, 'dist/src'),
     },
     devServer: {
         port: 3001,
@@ -36,7 +36,7 @@ module.exports = {
         new BrowserSyncPlugin({
             host: 'localhost',
             port: 4000,
-            server: { baseDir: ['dist'] },
+            server: { baseDir: ['dist/src'] },
         }),
     ],
     module: {

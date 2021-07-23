@@ -1,6 +1,6 @@
 const CONFIG = {
 
-    apiKey: 'RGAPI-d363231b-acea-422e-b9c2-f5262355e145',
+    apiKey: '',
 
     corsOptions: {
         origin: 'http://localhost:4000',
